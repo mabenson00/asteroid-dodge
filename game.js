@@ -11,29 +11,29 @@ const CONFIG = {
   canvasHeight: 600,
 
   // --- Ship ---
-  shipSpeed: 340,            // px/sec, instant response (no accel)
-  shipSize: 4,               // collision radius & draw scale
+  shipSpeed: 340, // px/sec, instant response (no accel)
+  shipSize: 4, // collision radius & draw scale
 
   // --- Asteroids ---
-  asteroidBaseSpeed: 155,    // px/sec baseline
+  asteroidBaseSpeed: 155, // px/sec baseline
   asteroidSpeedVariance: 90, // +/- random on top of base (high = chaotic)
-  asteroidMinSize: 4,        // smallest asteroid radius
-  asteroidMaxSize: 14,       // largest asteroid radius
+  asteroidMinSize: 4, // smallest asteroid radius
+  asteroidMaxSize: 14, // largest asteroid radius
   asteroidSpawnInterval: 200, // ms between spawn batches
-  asteroidBatchSize: 3,      // asteroids per spawn batch
-  asteroidAngleSpread: 1.3,  // radians of aim randomness (high = unpredictable)
-  asteroidVertices: [5, 8],  // min/max vertices for shape
-  asteroidRotationSpeed: 3,  // max radians/sec spin
+  asteroidBatchSize: 3, // asteroids per spawn batch
+  asteroidAngleSpread: 1.3, // radians of aim randomness (high = unpredictable)
+  asteroidVertices: [5, 8], // min/max vertices for shape
+  asteroidRotationSpeed: 3, // max radians/sec spin
 
   // --- Speed Surges ---
-  surgeInterval: [5000, 10000],  // ms between surges (random in range)
-  surgeDuration: [1500, 2500],   // ms a surge lasts
-  surgeMultiplier: 2.5,          // asteroid speed multiplier during surge
+  surgeInterval: [5000, 10000], // ms between surges (random in range)
+  surgeDuration: [1500, 2500], // ms a surge lasts
+  surgeMultiplier: 1.5, // asteroid speed multiplier during surge
   // --- Visual ---
-  starCount: 80,                 // background star particles
-  explosionParticleCount: 30,    // particles on death
-  screenShakeDuration: 400,      // ms of screen shake on death
-  screenShakeIntensity: 8,       // px max shake offset
+  starCount: 80, // background star particles
+  explosionParticleCount: 30, // particles on death
+  screenShakeDuration: 400, // ms of screen shake on death
+  screenShakeIntensity: 8, // px max shake offset
 
   // --- Scoring ---
   maxScoresSaved: 10,
@@ -66,7 +66,7 @@ function clamp(val, min, max) {
 // ============================================================
 
 const ScoreManager = {
-  _key: 'asteroidDodgeScores',
+  _key: "asteroidDodgeScores",
 
   _load() {
     try {
@@ -80,7 +80,9 @@ const ScoreManager = {
   _save(scores) {
     try {
       localStorage.setItem(this._key, JSON.stringify(scores));
-    } catch { /* silently fail if storage full */ }
+    } catch {
+      /* silently fail if storage full */
+    }
   },
 
   getScores() {
@@ -137,10 +139,10 @@ class Ship {
   update(dt, keys) {
     let dx = 0;
     let dy = 0;
-    if (keys.ArrowLeft || keys.a)  dx -= 1;
+    if (keys.ArrowLeft || keys.a) dx -= 1;
     if (keys.ArrowRight || keys.d) dx += 1;
-    if (keys.ArrowUp || keys.w)    dy -= 1;
-    if (keys.ArrowDown || keys.s)  dy += 1;
+    if (keys.ArrowUp || keys.w) dy -= 1;
+    if (keys.ArrowDown || keys.s) dy += 1;
 
     // Normalize diagonal movement
     const len = Math.sqrt(dx * dx + dy * dy);
@@ -161,14 +163,14 @@ class Ship {
     const s = this.size;
 
     // Outer glow
-    ctx.fillStyle = 'rgba(100, 180, 255, 0.15)';
+    ctx.fillStyle = "rgba(100, 180, 255, 0.15)";
     ctx.beginPath();
     ctx.arc(this.x, this.y, s * 1.6, 0, Math.PI * 2);
     ctx.fill();
 
     // Ship body (circle)
-    ctx.fillStyle = '#e0e8ff';
-    ctx.strokeStyle = '#7ab8ff';
+    ctx.fillStyle = "#e0e8ff";
+    ctx.strokeStyle = "#7ab8ff";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(this.x, this.y, s, 0, Math.PI * 2);
@@ -176,7 +178,7 @@ class Ship {
     ctx.stroke();
 
     // Inner highlight
-    ctx.fillStyle = 'rgba(180, 220, 255, 0.5)';
+    ctx.fillStyle = "rgba(180, 220, 255, 0.5)";
     ctx.beginPath();
     ctx.arc(this.x - s * 0.25, this.y - s * 0.25, s * 0.4, 0, Math.PI * 2);
     ctx.fill();
@@ -276,8 +278,8 @@ class Asteroid {
     ctx.translate(this.x, this.y);
     ctx.rotate(this.rotation);
 
-    const color = surgeActive ? '#ff6655' : '#aaa';
-    const strokeColor = surgeActive ? '#ff3322' : '#777';
+    const color = surgeActive ? "#ff6655" : "#aaa";
+    const strokeColor = surgeActive ? "#ff3322" : "#777";
 
     ctx.fillStyle = color;
     ctx.strokeStyle = strokeColor;
@@ -314,15 +316,15 @@ class Particle {
     this.decay = rand(1.5, 3.5);
     this.size = rand(1.5, 4);
     // Random warm color
-    const colors = ['#ff4444', '#ff8844', '#ffcc22', '#ffffff', '#ff6622', '#ffaa00'];
+    const colors = ["#ff4444", "#ff8844", "#ffcc22", "#ffffff", "#ff6622", "#ffaa00"];
     this.color = colors[randInt(0, colors.length - 1)];
   }
 
   update(dt) {
     this.x += this.vx * dt;
     this.y += this.vy * dt;
-    this.vx *= (1 - dt * 2);
-    this.vy *= (1 - dt * 2);
+    this.vx *= 1 - dt * 2;
+    this.vy *= 1 - dt * 2;
     this.life -= this.decay * dt;
   }
 
@@ -343,28 +345,28 @@ class Particle {
 
 class Game {
   constructor() {
-    this.canvas = document.getElementById('game-canvas');
-    this.ctx = this.canvas.getContext('2d');
+    this.canvas = document.getElementById("game-canvas");
+    this.ctx = this.canvas.getContext("2d");
     this.canvas.width = CONFIG.canvasWidth;
     this.canvas.height = CONFIG.canvasHeight;
 
     // Input
     this.keys = {};
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener("keydown", (e) => {
       this.keys[e.key] = true;
       // Prevent arrow key scrolling
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
         e.preventDefault();
       }
       // Handle state transitions on key press
-      if (this.state === 'title' && (e.key === 'Enter' || e.key === ' ')) {
+      if (this.state === "title" && (e.key === "Enter" || e.key === " ")) {
         this.startGame();
       }
-      if (this.state === 'gameover' && this.gameOverReady && (e.key === 'Enter' || e.key === ' ')) {
+      if (this.state === "gameover" && this.gameOverReady && (e.key === "Enter" || e.key === " ")) {
         this.showTitle();
       }
     });
-    window.addEventListener('keyup', (e) => {
+    window.addEventListener("keyup", (e) => {
       this.keys[e.key] = false;
     });
 
@@ -375,7 +377,7 @@ class Game {
     }
 
     // State
-    this.state = 'title'; // 'title' | 'playing' | 'gameover'
+    this.state = "title"; // 'title' | 'playing' | 'gameover'
     this.bestScore = ScoreManager.getBest();
 
     // Timing
@@ -389,12 +391,12 @@ class Game {
   // ---- State transitions ----
 
   showTitle() {
-    this.state = 'title';
+    this.state = "title";
     this.bestScore = ScoreManager.getBest();
   }
 
   startGame() {
-    this.state = 'playing';
+    this.state = "playing";
     this.ship = new Ship(CONFIG.canvasWidth / 2, CONFIG.canvasHeight / 2);
     this.asteroids = [];
     this.particles = [];
@@ -420,7 +422,7 @@ class Game {
   }
 
   triggerGameOver() {
-    this.state = 'gameover';
+    this.state = "gameover";
     this.gameOverReady = false;
     this.gameOverTimer = 0;
 
@@ -456,9 +458,9 @@ class Game {
   // ---- Update ----
 
   update(dt) {
-    if (this.state === 'playing') {
+    if (this.state === "playing") {
       this.updatePlaying(dt);
-    } else if (this.state === 'gameover') {
+    } else if (this.state === "gameover") {
       this.updateGameOver(dt);
     }
   }
@@ -569,12 +571,12 @@ class Game {
     ctx.save();
 
     // Screen shake offset
-    if (this.state === 'gameover') {
+    if (this.state === "gameover") {
       ctx.translate(this.shakeX, this.shakeY);
     }
 
     // Background
-    ctx.fillStyle = '#0a0a12';
+    ctx.fillStyle = "#0a0a12";
     ctx.fillRect(-10, -10, W + 20, H + 20);
 
     // Stars
@@ -583,20 +585,20 @@ class Game {
     }
 
     // Surge tint overlay
-    if (this.state === 'playing' && this.surgeActive) {
-      ctx.fillStyle = 'rgba(255, 30, 0, 0.06)';
+    if (this.state === "playing" && this.surgeActive) {
+      ctx.fillStyle = "rgba(255, 30, 0, 0.06)";
       ctx.fillRect(0, 0, W, H);
     }
 
     // Asteroids
-    if (this.state === 'playing' || this.state === 'gameover') {
+    if (this.state === "playing" || this.state === "gameover") {
       for (const asteroid of this.asteroids) {
         asteroid.draw(ctx, this.surgeActive);
       }
     }
 
     // Ship
-    if (this.state === 'playing') {
+    if (this.state === "playing") {
       this.ship.draw(ctx);
     }
 
@@ -611,38 +613,38 @@ class Game {
 
     // --- HUD / Overlays (not affected by shake) ---
 
-    if (this.state === 'title') {
+    if (this.state === "title") {
       this.renderTitle(ctx, W, H);
-    } else if (this.state === 'playing') {
+    } else if (this.state === "playing") {
       this.renderHUD(ctx, W, H);
-    } else if (this.state === 'gameover') {
+    } else if (this.state === "gameover") {
       this.renderGameOver(ctx, W, H);
     }
   }
 
   renderTitle(ctx, W, H) {
     // Title
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     // Game title
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = "#fff";
     ctx.font = 'bold 42px "Courier New", monospace';
-    ctx.fillText('ASTEROID DODGE', W / 2, H * 0.3);
+    ctx.fillText("ASTEROID DODGE", W / 2, H * 0.3);
 
     // Subtitle
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = "#888";
     ctx.font = '16px "Courier New", monospace';
-    ctx.fillText('Dodge the rocks. Survive the surges.', W / 2, H * 0.38);
+    ctx.fillText("Dodge the rocks. Survive the surges.", W / 2, H * 0.38);
 
     // Controls
-    ctx.fillStyle = '#666';
+    ctx.fillStyle = "#666";
     ctx.font = '14px "Courier New", monospace';
-    ctx.fillText('Arrow keys or WASD to move', W / 2, H * 0.52);
+    ctx.fillText("Arrow keys or WASD to move", W / 2, H * 0.52);
 
     // Best score
     if (this.bestScore > 0) {
-      ctx.fillStyle = '#ffcc00';
+      ctx.fillStyle = "#ffcc00";
       ctx.font = '18px "Courier New", monospace';
       ctx.fillText(`Best: ${this.bestScore.toFixed(1)}s`, W / 2, H * 0.62);
     }
@@ -651,73 +653,69 @@ class Game {
     const pulse = 0.5 + 0.5 * Math.sin(this.globalTime * 3);
     ctx.fillStyle = `rgba(255, 255, 255, ${0.4 + pulse * 0.6})`;
     ctx.font = 'bold 20px "Courier New", monospace';
-    ctx.fillText('Press ENTER or SPACE to start', W / 2, H * 0.75);
+    ctx.fillText("Press ENTER or SPACE to start", W / 2, H * 0.75);
   }
 
   renderHUD(ctx, W, H) {
     // Time survived
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillStyle = '#fff';
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "#fff";
     ctx.font = 'bold 20px "Courier New", monospace';
     ctx.fillText(`${this.elapsedTime.toFixed(1)}s`, 15, 15);
 
     // Best score
-    ctx.textAlign = 'right';
-    ctx.fillStyle = '#666';
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#666";
     ctx.font = '14px "Courier New", monospace';
     ctx.fillText(`Best: ${this.bestScore.toFixed(1)}s`, W - 15, 17);
 
     // Surge active indicator
     if (this.surgeActive) {
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#ff3322';
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#ff3322";
       ctx.font = 'bold 24px "Courier New", monospace';
-      ctx.fillText('SURGE!', W / 2, 15);
+      ctx.fillText("SURGE!", W / 2, 15);
     }
   }
 
   renderGameOver(ctx, W, H) {
     // Dim overlay
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
     ctx.fillRect(0, 0, W, H);
 
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     // GAME OVER
-    ctx.fillStyle = '#ff4444';
+    ctx.fillStyle = "#ff4444";
     ctx.font = 'bold 40px "Courier New", monospace';
-    ctx.fillText('GAME OVER', W / 2, H * 0.2);
+    ctx.fillText("GAME OVER", W / 2, H * 0.2);
 
     // Score
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = "#fff";
     ctx.font = 'bold 28px "Courier New", monospace';
     ctx.fillText(`${this.finalScore.toFixed(1)}s`, W / 2, H * 0.3);
 
     // New best?
     if (this.finalScore >= this.bestScore) {
-      ctx.fillStyle = '#ffcc00';
+      ctx.fillStyle = "#ffcc00";
       ctx.font = 'bold 18px "Courier New", monospace';
-      ctx.fillText('NEW BEST!', W / 2, H * 0.36);
+      ctx.fillText("NEW BEST!", W / 2, H * 0.36);
     }
 
     // Top scores
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = "#888";
     ctx.font = '16px "Courier New", monospace';
-    ctx.fillText('— TOP SCORES —', W / 2, H * 0.46);
+    ctx.fillText("— TOP SCORES —", W / 2, H * 0.46);
 
-    ctx.fillStyle = '#ccc';
+    ctx.fillStyle = "#ccc";
     ctx.font = '15px "Courier New", monospace';
     const scores = this.topScores || [];
     for (let i = 0; i < scores.length; i++) {
       const highlight = scores[i] === this.finalScore && i === scores.indexOf(this.finalScore);
-      ctx.fillStyle = highlight ? '#ffcc00' : '#aaa';
-      ctx.fillText(
-        `${(i + 1).toString().padStart(2, ' ')}. ${scores[i].toFixed(1)}s`,
-        W / 2,
-        H * 0.52 + i * 22
-      );
+      ctx.fillStyle = highlight ? "#ffcc00" : "#aaa";
+      ctx.fillText(`${(i + 1).toString().padStart(2, " ")}. ${scores[i].toFixed(1)}s`, W / 2, H * 0.52 + i * 22);
     }
 
     // Restart prompt
@@ -725,7 +723,7 @@ class Game {
       const pulse = 0.5 + 0.5 * Math.sin(this.globalTime * 3);
       ctx.fillStyle = `rgba(255, 255, 255, ${0.4 + pulse * 0.6})`;
       ctx.font = 'bold 18px "Courier New", monospace';
-      ctx.fillText('Press ENTER or SPACE to retry', W / 2, H * 0.92);
+      ctx.fillText("Press ENTER or SPACE to retry", W / 2, H * 0.92);
     }
   }
 }
@@ -734,6 +732,6 @@ class Game {
 // Boot
 // ============================================================
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener("DOMContentLoaded", () => {
   new Game();
 });
