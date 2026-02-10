@@ -26,7 +26,7 @@ const CONFIG = {
   asteroidRotationSpeed: 3, // max radians/sec spin
 
   // --- Speed Surges ---
-  surgeInterval: [5000, 10000], // ms between surges (random in range)
+  surgeInterval: [4000, 70000], // ms between surges (random in range)
   surgeDuration: [1500, 2500], // ms a surge lasts
   surgeMultiplier: 1.5, // asteroid speed multiplier during surge
   // --- Visual ---
