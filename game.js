@@ -630,7 +630,7 @@ class Game {
     // Game title
     ctx.fillStyle = "#fff";
     ctx.font = 'bold 42px "Courier New", monospace';
-    ctx.fillText("ASTEROID DODGE", W / 2, H * 0.3);
+    ctx.fillText("NOOB GAME 2", W / 2, H * 0.3);
 
     // Subtitle
     ctx.fillStyle = "#888";
