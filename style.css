@@ -1,0 +1,28 @@
+/* Reset & fullscreen centering */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#game-container {
+  position: relative;
+  line-height: 0;
+}
+
+#game-canvas {
+  display: block;
+  border: 2px solid #333;
+  border-radius: 4px;
+  image-rendering: pixelated;
+}
