@@ -26,7 +26,7 @@ const CONFIG = {
   asteroidRotationSpeed: 3, // max radians/sec spin
 
   // --- Speed Surges ---
-  surgeInterval: [4000, 70000], // ms between surges (random in range)
+  surgeInterval: [4000, 7000], // ms between surges (random in range)
   surgeDuration: [1500, 2500], // ms a surge lasts
   surgeMultiplier: 1.5, // asteroid speed multiplier during surge
   // --- Visual ---
@@ -734,10 +734,10 @@ class Game {
 
 window.addEventListener("DOMContentLoaded", () => {
   // Clear scores if ?reset is in the URL
-  if (window.location.search.includes('reset')) {
-    localStorage.removeItem('asteroidDodgeScores');
+  if (window.location.search.includes("reset")) {
+    localStorage.removeItem("asteroidDodgeScores");
     // Clean the URL so it doesn't keep clearing on refresh
-    window.history.replaceState({}, '', window.location.pathname);
+    window.history.replaceState({}, "", window.location.pathname);
   }
   new Game();
 });
