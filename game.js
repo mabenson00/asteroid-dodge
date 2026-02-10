@@ -733,5 +733,11 @@ class Game {
 // ============================================================
 
 window.addEventListener("DOMContentLoaded", () => {
+  // Clear scores if ?reset is in the URL
+  if (window.location.search.includes('reset')) {
+    localStorage.removeItem('asteroidDodgeScores');
+    // Clean the URL so it doesn't keep clearing on refresh
+    window.history.replaceState({}, '', window.location.pathname);
+  }
   new Game();
 });
