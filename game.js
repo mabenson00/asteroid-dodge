@@ -11,7 +11,7 @@ const CONFIG = {
   canvasHeight: 600,
 
   // --- Ship ---
-  shipSpeed: 340, // px/sec, instant response (no accel)
+  shipSpeed: 200, // px/sec, instant response (no accel)
   shipSize: 4, // collision radius & draw scale
 
   // --- Asteroids ---
